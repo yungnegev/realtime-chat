@@ -1,13 +1,18 @@
+import { authOptions } from '@/lib/auth'
+import { getServerSession } from 'next-auth'
 import { FC } from 'react'
 
 interface pageProps {}
 
-const page: FC<pageProps> = ({}) => {
+const Dashboard = async ({}) => {
+
+  const session = await getServerSession(authOptions)
+
   return (
-    <div>
-        dashboard
-    </div>
+    <pre>
+        {JSON.stringify(session)}
+    </pre>
   )
 }
 
-export default page
+export default Dashboard
