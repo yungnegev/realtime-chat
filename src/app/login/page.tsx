@@ -6,6 +6,8 @@ import { FcGoogle } from 'react-icons/fc'
 import { signIn } from 'next-auth/react'
 import Button from '@/components/ui/Button'
 import { toast } from 'react-hot-toast'
+import Image from 'next/image'
+import imgSrc from '../../../public/logo.svg'
 
 interface pageProps {}
 
@@ -29,7 +31,7 @@ const Login: FC<pageProps> = ({}) => {
     <div className='flex justify-center items-center min-h-full py-12 px-4 sm:px-6 lg:px-8'>
         <div className='flex flex-col w-full items-center max-w-md space-y-8'>
             <div className='flex flex-col items-center gap-8'>
-                logo
+              <Image src={imgSrc} alt='logo' className='h-8 w-auto' width={48} height={48} />
                 <h2 className='mt-6 text-center text-3xl font-bold tracking-tight text-gray-900'>
                     Sign in to your account
                 </h2>
