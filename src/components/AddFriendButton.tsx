@@ -85,9 +85,9 @@ const AddFriendButton = () => {
             </Button>
         </div>
         {/* if there is an error, then we will show the error message */}
-        <span className='mt-1 text-sm text-red-600'>{ errors.email?.message }</span>
+        <span className='mt-1 text-sm text-rose-600'>{ errors.email?.message }</span>
         {   // if showSuccessState is true, then we will show the success message
-            showSuccessState && <span className='mt-1 text-sm text-green-600'>Friend added!</span>
+            showSuccessState && <span className='mt-1 text-sm text-teal-600'>Friend request sent!</span>
         }
     </form>
   )
