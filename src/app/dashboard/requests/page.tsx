@@ -34,7 +34,7 @@ const RuequestsPage = async () => {
 
   return (
     <main className='pt-8'>
-        <h2 className='font-bold text-5xl mb-8'>Add a friend</h2>
+        <h2 className='font-bold text-5xl mb-8'>Friend requests</h2>
         <div className='flex flex-col gap-4'>
             <FriendRequests sessionId={session.user.id} incomingFriendRequests={incomingFriendRequests}/>
         </div>
