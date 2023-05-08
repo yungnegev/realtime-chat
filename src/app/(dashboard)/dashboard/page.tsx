@@ -8,9 +8,9 @@ const Dashboard = async ({}) => {
   const session = await getServerSession(authOptions)
 
   return (
-    <pre>
-        {JSON.stringify(session)}
-    </pre>
+    <div>
+        <h1>Dashboard</h1>
+    </div>
   )
 }
 

@@ -22,10 +22,12 @@ const RuequestsPage = async () => {
   // to make them simultaneous we use Promise.all
   const incomingFriendRequests = await Promise.all(
     incomingSenderIds.map(async (id) => {
-        const sender = await fetchRedis('get', `user:${id}`) as User
+        const sender = await fetchRedis('get', `user:${id}`) as string
+        // then convert the string to an object
+        const senderObj = JSON.parse(sender) as User
         return {
             senderId: id,
-            senderEmail: sender.email,
+            senderEmail: senderObj.email,
         }
     })
   )
