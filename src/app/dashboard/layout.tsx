@@ -10,6 +10,8 @@ import { IconType } from 'react-icons'
 import SignOutButton from '@/components/SignOutButton'
 import FriendRequestSidebarOptions from '@/components/FriendRequestSidebarOptions'
 import { fetchRedis } from '@/lib/redisHelperFunctionInApi'
+import { getFriendsHelper } from '@/lib/getFriendsHelper'
+import SidebarChatList from '@/components/SidebarChatList'
 
 interface LayoutProps {
     children: ReactNode
@@ -36,24 +38,33 @@ const layout = async ({ children }: LayoutProps) => {
   const session = await getServerSession(authOptions)
   // this is not the main solution, we will use middleware to protect the sensitive routes
   if (!session) notFound()
+
+  // get the friends list
+  const friends = await getFriendsHelper(session.user.id)
+
+
   // since this is a server compontent we are interacting directly with the database (redis) using our helper function
   // we need to know that smembers is giving us back an array so after we fetch it we need to cast it to User[], and get its length
   const unseenRequestCount = (await fetchRedis('smembers', `user:${session.user.id}:incoming_friend_requests`) as User[]).length
 
   return (
     <div className='flex w-full h-screen'>
-        <div className='flex flex-col h-full w-full max-w-xs grow gap-5 overflow-y-auto border-r border-gray-200 bg-white px-6'>
+        <div className='flex flex-col h-full w-full max-w-xs grow gap-5 overflow-y-auto border-r border-gray-300 bg-white px-6'>
         <Link href='/dashboard' className='flex items-center shrink-0 h-16'>
             <Image src={imgSrc} alt='logo' className='h-8 w-auto' width={40} height={40} />
         </Link>
         
-        <span className='text-xs font-semibold leading-6 text-gray-400 tracking-wider'>
-          YOUR CONVERSATIONS
-        </span>
+        {friends.length > 0 && (
+          <span className='text-xs font-semibold leading-6 text-gray-400 tracking-wider'>
+            YOUR CONVERSATIONS
+          </span>
+        )}
 
         <nav className='flex flex-1 flex-col'>
           <ul role='list' className='flex flex-1 flex-col gap-7'>
-            <li># user chats</li>
+            <li>
+              <SidebarChatList friends={friends} sessionId={session.user.id}/>
+            </li>
             <li>
               <span className='text-xs font-semibold leading-6 text-gray-400 tracking-wider'>
                 OVERVIEW
@@ -75,13 +86,11 @@ const layout = async ({ children }: LayoutProps) => {
                     </li>
                   )
                 })}
+                <li>
+                  <FriendRequestSidebarOptions sessionId={session.user.id} initialUnseenRequestCount={unseenRequestCount}/>
+                </li>  
               </ul>
-            </li>
-
-            <li>
-                <FriendRequestSidebarOptions sessionId={session.user.id} initialUnseenRequestCount={unseenRequestCount}/>
-            </li>    
-
+            </li>  
             <li className='-mx-6 mt-auto flex items-center'>
                 <div className='flex flex-1 items-center gap-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900'>
                   <div className='relative h-8 w-8 bg-gray-50'>
