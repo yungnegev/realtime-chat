@@ -5,6 +5,7 @@ import TextAreaAutosize from 'react-textarea-autosize' // for multiline textarea
 import Button from './ui/Button'
 import { BsFillSendFill } from 'react-icons/bs'
 import axios from 'axios'
+import { toast } from 'react-hot-toast'
 
 interface ChatInputProps {
     chatPartner: User
@@ -18,13 +19,17 @@ const ChatInput = ({ chatPartner, chatId }:ChatInputProps) => {
   // controlled input to the extarea, like one would do with redux but just with normal state
   const [input, setInput] = useState<string>('')
 
-
   const sendMessage = async () => {
     setIsLoading(true)
     try {
         await axios.post('/api/messages/send', {text: input, chatId})
+        setInput('')
+        // to re focus the textearea after sending a message 
+        textareaRef.current?.focus() 
     } catch (error) {
-      
+        toast.error('Something went wrong') 
+    } finally {
+        setIsLoading(false)
     }
   }
 
