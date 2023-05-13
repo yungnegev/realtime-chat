@@ -20,6 +20,7 @@ const ChatInput = ({ chatPartner, chatId }:ChatInputProps) => {
   const [input, setInput] = useState<string>('')
 
   const sendMessage = async () => {
+    if (!input) return
     setIsLoading(true)
     try {
         await axios.post('/api/messages/send', {text: input, chatId})
