@@ -1,7 +1,9 @@
 'use client'
 
+import { pusherClient } from '@/lib/pusher'
+import { replaceColons } from '@/lib/utils'
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FiUser } from "react-icons/fi"
 
 interface FriendRequestSidebarOptionsProps {
@@ -12,7 +14,22 @@ interface FriendRequestSidebarOptionsProps {
 const FriendRequestSidebarOptions = ({ initialUnseenRequestCount, sessionId  }:FriendRequestSidebarOptionsProps) => {
 
   // the parent component will be a server component which will fetch the unseen request count and pass it down to this component  
-  const [unseenRequestCount, setUnseenRequestCount ] = useState<number>(initialUnseenRequestCount)  
+  const [unseenRequestCount, setUnseenRequestCount ] = useState<number>(initialUnseenRequestCount)
+  
+  useEffect(() => {
+    pusherClient.subscribe(replaceColons(`user:${sessionId}:incoming_friend_requests`))
+
+    const friendRequestHandler = () => {
+        setUnseenRequestCount((prev) => prev + 1)
+    }
+
+    pusherClient.bind(`incoming_friend_requests`, friendRequestHandler)
+
+    return () => {
+        pusherClient.unsubscribe(replaceColons(`user:${sessionId}:incoming_friend_requests`))
+        pusherClient.unbind(`incoming_friend_requests`, friendRequestHandler)
+    }
+  },[])
 
   return (
     <Link href={'/dashboard/requests'} className='text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex items-center gap-3 rounded-md p-2 text-sm leading-6 font-semibold'>

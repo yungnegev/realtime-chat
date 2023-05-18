@@ -8,6 +8,12 @@ body {
   padding: 0;
 }
 
+/* @layer base {
+  container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8
+  }
+} */
+
 /* some classes which are hard to do in tailwind */
 
 .scrollbar-w-2::-webkit-scrollbar {

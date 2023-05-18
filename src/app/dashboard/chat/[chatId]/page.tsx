@@ -61,9 +61,10 @@ const Chat = async ({params}:ChatProps) => {
   // getting the chat messages
   const initialChatMessages = await getChatMessages(chatId)
 
+  // max-h-[calc(100vh-6rem)]
   
   return (
-    <div className='flex flex-col flex-1 justify-between h-full max-h-[calc(100vh-6rem)]'>
+    <div className='flex flex-col flex-1 justify-between h-full max-h-[calc(100vh-1rem)]'>
       <div className='flex sm:items-center justify-between py-3 border-b border-gray-300'>
         <div className='relative flex items-center space-x-4 ml-4'>
           <div className='relative'>
@@ -79,7 +80,7 @@ const Chat = async ({params}:ChatProps) => {
           </div>
         </div>
       </div>
-      <Messages initialMessages={initialChatMessages} sessionId={session.user.id} />
+      <Messages initialMessages={initialChatMessages} sessionId={session.user.id} chatId={chatId}/>
       <ChatInput chatPartner={partnerUser} chatId={chatId} />
     </div>
   )

@@ -1,18 +1,36 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { Message } from '../lib/validations/message' // absolutely nasty
-import { cn } from '@/lib/utils'
+import { cn, replaceColons } from '@/lib/utils'
 import { format } from 'date-fns'
+import { pusherClient } from '@/lib/pusher'
+
 
 interface MessagesProps {
     initialMessages: Message[] // nasty ass validation inferred type living somewhere deep in lib
     sessionId: string
+    chatId: string
 }
 
-const Messages = ({ initialMessages, sessionId }:MessagesProps) => {
+const Messages = ({ initialMessages, sessionId, chatId }:MessagesProps) => {
   
   const [messages, setMessages] = useState<Message[]>(initialMessages)
+
+  useEffect(() => {
+    pusherClient.subscribe(replaceColons(`chat:${chatId}`))
+
+    const messageHandler = (message: Message) => {
+      setMessages((prev) => [message, ...prev])
+    }
+
+    pusherClient.bind(`incoming-message`, messageHandler)
+
+    return () => {
+        pusherClient.unsubscribe(replaceColons(`chat:${chatId}`))
+        pusherClient.unbind(`incoming-message`, messageHandler)
+    }
+  },[])
   
   const scrollDownRef = useRef<HTMLDivElement | null>(null)
 

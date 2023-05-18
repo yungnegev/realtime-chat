@@ -1,9 +1,10 @@
 'use client'
 
-import { chatHrefConstructor } from "@/lib/utils"
+import { chatHrefConstructor, replaceColons } from "@/lib/utils"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import Image from "next/image"
+import { pusherClient } from '@/lib/pusher'
 
 interface SidebarChatListProps {
     friends: User[]
@@ -17,6 +18,11 @@ const SidebarChatList = ({friends, sessionId}: SidebarChatListProps) => {
   const pathname = usePathname()
   // we will save the messages in state, however we wont have message notifications from the server
   const [unseenMessages, setUnseenMessages] = useState<Message[]>([])
+
+  // realtime message functionality, it is done here because this component is always mounted
+  useEffect(() => {
+    pusherClient.subscribe(replaceColons(`user:${sessionId}:chats`))
+  }, [])
 
   // a quik useeffect that will run everytime the pathname changes
   useEffect(() => {

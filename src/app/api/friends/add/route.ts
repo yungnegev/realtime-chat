@@ -1,9 +1,11 @@
 import { authOptions } from "@/lib/auth"
 import { db } from "@/lib/db"
+import { pusherServer } from '@/lib/pusher'
 import { fetchRedis } from "@/lib/redisHelperFunctionInApi"
 import { addFriendValidator } from "@/lib/validations/add-friend"
 import { getServerSession } from "next-auth"
 import { z } from "zod"
+import { replaceColons } from '../../../../lib/utils'
 
 // a lot of these next.js requests are cached so we will need workarounds to make sure we don't get stale data
 
@@ -55,6 +57,11 @@ export async function POST (req: Request, res: Response) {
         if (isFriends) {
             return new Response('User already in friends list.', {status: 400})
         }
+        // send pusher 
+        pusherServer.trigger(replaceColons(`user:${idToAdd}:incoming_friend_requests`), 'incoming_friend_requests', {
+            senderId: session.user.id,
+            senderEmail: session.user.email,
+        })
         // add the user to the incoming friend requests list in the db (valid request)
         db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.user.id)
         // return a 200 response

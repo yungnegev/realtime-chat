@@ -1,6 +1,8 @@
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
+import { pusherServer } from '@/lib/pusher'
 import { fetchRedis } from '@/lib/redisHelperFunctionInApi'
+import { replaceColons } from '@/lib/utils'
 import { Message, messageSchema } from '@/lib/validations/message'
 import { nanoid } from 'nanoid'
 import { getServerSession } from 'next-auth'
@@ -31,7 +33,6 @@ export async function POST(req: Request) {
         const rawSender = await fetchRedis('get', `user:${session.user.id}`) as string
         const sender = JSON.parse(rawSender) as User
 
-        // all valid, send it
         const timestamp = Date.now()
         // using nanoid for unique id
         const messageData: Message = {
@@ -42,6 +43,9 @@ export async function POST(req: Request) {
         }
 
         const message = messageSchema.parse(messageData)
+
+        // notify all connected chat room users
+        pusherServer.trigger(replaceColons(`chat:${chatId}`), 'incoming-message', message)
 
         await db.zadd(`chat:${chatId}:messages`, {
             score: timestamp,
