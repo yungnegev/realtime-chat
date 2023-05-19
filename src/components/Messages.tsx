@@ -30,7 +30,7 @@ const Messages = ({ initialMessages, sessionId, chatId }:MessagesProps) => {
         pusherClient.unsubscribe(replaceColons(`chat:${chatId}`))
         pusherClient.unbind(`incoming-message`, messageHandler)
     }
-  },[])
+  },[chatId])
   
   const scrollDownRef = useRef<HTMLDivElement | null>(null)
 

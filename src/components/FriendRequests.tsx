@@ -3,7 +3,7 @@
 import { pusherClient } from '@/lib/pusher';
 import { replaceColons } from '@/lib/utils';
 import axios from "axios"
-import router from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from "react"
 import { FaUserFriends } from 'react-icons/fa'
 import { TfiClose, TfiCheck } from 'react-icons/tfi'
@@ -16,6 +16,7 @@ interface FriendRequestProps {
 const FriendRequests = ({ incomingFriendRequests, sessionId }:FriendRequestProps) => {
 
   const [friendRequests, setFriendRequests] = useState<IncomingFriendRequest[]>(incomingFriendRequests)
+  const router = useRouter()
 
   useEffect(() => {
     pusherClient.subscribe(replaceColons(`user:${sessionId}:incoming_friend_requests`))
@@ -28,18 +29,18 @@ const FriendRequests = ({ incomingFriendRequests, sessionId }:FriendRequestProps
         pusherClient.unsubscribe(replaceColons(`user:${sessionId}:incoming_friend_requests`))
         pusherClient.unbind(`incoming_friend_requests`, friendRequestHandler)
     }
-  }, [])
+  }, [sessionId])
 
   const acceptFriend = async (senderId: string) => {
     await axios.post('/api/friends/accept', {id: senderId})
     setFriendRequests((prev) => prev.filter((request) => request.senderId !== senderId))
-    router.reload()
+    router.refresh()
   }
 
   const denyFriend = async (senderId: string) => {
     await axios.post('/api/friends/deny', {id: senderId})
     setFriendRequests((prev) => prev.filter((request) => request.senderId !== senderId))
-    router.reload()
+    router.refresh()
   }
 
   return (
@@ -47,7 +48,7 @@ const FriendRequests = ({ incomingFriendRequests, sessionId }:FriendRequestProps
     {
         friendRequests.length == 0 
             ? (
-                <span className='text-gray-500 tracking-wider font-semibold text-sm'>NOTHING TO SHOW HERE</span>
+                <span className='text-gray-500 tracking-wider font-light text-sm'>NOTHING TO SHOW HERE</span>
             ) 
             : (
                 friendRequests.map((request) => {

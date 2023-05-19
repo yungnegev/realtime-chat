@@ -33,7 +33,7 @@ const RuequestsPage = async () => {
   )
 
   return (
-    <main className='pt-8'>
+    <main className='pt-8 pl-8 md:pl-16 md:pt-16'>
         <h2 className='font-bold text-5xl mb-8'>Friend requests</h2>
         <div className='flex flex-col gap-4'>
             <FriendRequests sessionId={session.user.id} incomingFriendRequests={incomingFriendRequests}/>

@@ -66,10 +66,10 @@ const AddFriendButton = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='max-w-sm'>
         <label 
-            className='block text-sm font-medium leading-6 text-gray-900'
+            className='block text-xs font-light leading-6 text-gray-500'
             htmlFor='email'
             >
-                Search by email
+                SEARCH BY EMAIL
         </label>
         <div className='mt-2 flex gap-4'>
             <input

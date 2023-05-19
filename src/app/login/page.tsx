@@ -9,9 +9,8 @@ import { toast } from 'react-hot-toast'
 import Image from 'next/image'
 import imgSrc from '../../../public/logo.svg'
 
-interface pageProps {}
 
-const Login: FC<pageProps> = ({}) => {
+const Login: FC = () => {
 
   const [loading, setLoading] = useState<boolean>(false)
 
