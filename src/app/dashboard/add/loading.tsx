@@ -4,7 +4,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 
 const loading = () => {
   return (
-    <div className='w-full flex flex-col gap-3 pt-8 pl-8 md:pl-16 md:pt-16'>
+    <div className='w-full flex flex-col gap-3 pt-24 pl-8 md:pl-16 md:pt-16'>
       <Skeleton className='mb-4' height={60} width={500} />
       <Skeleton className='mb-4' height={20} width={150} />
       <Skeleton className='mb-4' height={50} width={400} />

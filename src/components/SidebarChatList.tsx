@@ -60,6 +60,8 @@ const SidebarChatList = ({friends, sessionId}: SidebarChatListProps) => {
     return () => {
       pusherClient.unsubscribe(replaceColons(`user:${sessionId}:chats`))
       pusherClient.unsubscribe(replaceColons(`user:${sessionId}:friends`))
+      pusherClient.unbind('new_message', chatHandler)
+      pusherClient.unbind('new_friend', friendHandler)
     }
   }, [pathname, sessionId, router])
 

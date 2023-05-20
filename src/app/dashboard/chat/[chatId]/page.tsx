@@ -64,7 +64,7 @@ const Chat = async ({params}:ChatProps) => {
   // max-h-[calc(100vh-6rem)]
   
   return (
-    <div className='flex flex-col flex-1 justify-between h-full max-h-[calc(100vh-1rem)]'>
+    <div className='flex flex-col flex-1 justify-between h-full max-h-[calc(100vh-1rem)] pt-14 md:pt-0'>
       <div className='flex sm:items-center justify-between py-3 border-b border-gray-300'>
         <div className='relative flex items-center space-x-4 ml-4'>
           <div className='relative'>

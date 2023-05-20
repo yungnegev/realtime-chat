@@ -3,7 +3,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 
 const loading = () => {
   return (
-<div className='flex flex-col h-full items-center'>
+<div className='flex flex-col h-full items-center pt-24'>
       <Skeleton className='mb-4' height={40} width={400} />
       {/* chat messages */}
       <div className='flex-1 max-h-full overflow-y-scroll w-full'>

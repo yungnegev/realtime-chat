@@ -3,6 +3,8 @@ import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { getServerSession } from 'next-auth'
 import { z } from 'zod'
+import { pusherServer } from '@/lib/pusher'
+import { replaceColons } from '@/lib/utils'
 
 export async function POST(req: Request) {
   try {
@@ -36,6 +38,8 @@ export async function POST(req: Request) {
     if (!hasFriendRequest) {
       return new Response('No friend request', { status: 400 })
     }
+    // notify the user 
+    pusherServer.trigger(replaceColons(`user:${idToAdd}:friends`), 'new_friend', {})
 
     // add usser to friends list
     await db.sadd(`user:${session.user.id}:friends`, idToAdd)
